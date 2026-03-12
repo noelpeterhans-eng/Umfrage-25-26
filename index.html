@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saisonrückblick – Unihockey Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --dark:#0d1117;--card:#1f2d3d;--accent:#00c8ff;--accent2:#ff4d6d;--text:#cdd6e0;--muted:#6b7f94;--green:#00e5a0; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(0,200,255,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(255,77,109,.06) 0%,transparent 60%);pointer-events:none;z-index:0;}
+  body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  .container{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:48px 24px 80px;}
+  header{text-align:center;margin-bottom:56px;animation:fadeDown .7s ease both;}
+  .badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(0,200,255,.3);padding:5px 14px;border-radius:2px;margin-bottom:20px;background:rgba(0,200,255,.05);}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,88px);line-height:.9;color:#fff;margin-bottom:8px;}
+  h1 span{color:var(--accent);display:block;}
+  .subtitle{font-size:15px;color:var(--muted);font-weight:300;margin-top:16px;}
+  .divider{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:24px auto 0;border-radius:2px;}
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;margin-top:48px;}
+  .section-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:rgba(0,200,255,.2);line-height:1;min-width:40px;}
+  .section-info h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.08em;color:#fff;text-transform:uppercase;}
+  .section-info p{font-size:12px;color:var(--muted);font-weight:300;letter-spacing:.05em;text-transform:uppercase;}
+  .card{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:28px 28px 24px;margin-bottom:16px;transition:border-color .2s,transform .2s;animation:fadeUp .5s ease both;}
+  .card:hover{border-color:rgba(0,200,255,.15);transform:translateY(-1px);}
+  .card.invalid{border-color:var(--accent2)!important;}
+  label.question{display:block;font-size:15px;font-weight:500;color:#e4ecf2;margin-bottom:16px;line-height:1.5;}
+  label.question .qnum{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.1em;color:var(--accent);display:block;margin-bottom:4px;}
+  .req{color:var(--accent2);margin-left:2px;}
+  input[type="text"]{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:14px 16px;transition:border-color .2s;outline:none;}
+  input[type="text"]:focus{border-color:rgba(0,200,255,.4);background:rgba(0,200,255,.03);}
+  input[type="text"]::placeholder{color:var(--muted);}
+  .stars{display:flex;gap:6px;flex-direction:row-reverse;justify-content:flex-end;}
+  .stars input{display:none;}
+  .stars label{font-size:28px;cursor:pointer;color:rgba(255,255,255,.15);transition:color .15s,transform .15s;margin-bottom:0;}
+  .stars input:checked~label,.stars label:hover,.stars label:hover~label{color:#ffd700;transform:scale(1.15);}
+  .scale{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .scale-label{font-size:11px;color:var(--muted);white-space:nowrap;}
+  .scale-btns{display:flex;gap:6px;}
+  .scale input{display:none;}
+  .scale-btn{width:42px;height:42px;border-radius:4px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'DM Sans',sans-serif;}
+  .scale input:checked+.scale-btn{background:var(--accent);color:var(--dark);border-color:var(--accent);transform:scale(1.1);}
+  .scale-btn:hover{border-color:rgba(0,200,255,.4);color:var(--accent);}
+  textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:14px 16px;resize:vertical;min-height:90px;transition:border-color .2s;outline:none;}
+  textarea:focus{border-color:rgba(0,200,255,.4);background:rgba(0,200,255,.03);}
+  textarea::placeholder{color:var(--muted);}
+  textarea.large{min-height:140px;}
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .option{display:flex;align-items:center;gap:12px;cursor:pointer;padding:10px 14px;border-radius:4px;border:1px solid rgba(255,255,255,.07);transition:all .15s;}
+  .option:hover{background:rgba(0,200,255,.05);border-color:rgba(0,200,255,.2);}
+  .option input{display:none;}
+  .option-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+  .option input:checked~.option-dot{border-color:var(--accent);background:var(--accent);}
+  .option input:checked~.option-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--dark);}
+  .option-check{width:18px;height:18px;border-radius:3px;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;}
+  .option input:checked~.option-check{border-color:var(--accent2);background:var(--accent2);color:#fff;}
+  .option span.label{font-size:14px;color:var(--text);}
+  .field-error{font-size:12px;color:var(--accent2);margin-top:8px;display:none;}
+  .field-error.show{display:block;}
+  .card.notes-card{border-color:rgba(0,229,160,.2);background:linear-gradient(135deg,#1f2d3d 0%,#1a2d28 100%);}
+  .card.notes-card:hover{border-color:rgba(0,229,160,.4);}
+  .card.notes-card label.question .qnum{color:var(--green);}
+  .card.notes-card textarea:focus{border-color:rgba(0,229,160,.4);background:rgba(0,229,160,.03);}
+  .submit-area{margin-top:48px;text-align:center;animation:fadeUp .5s .3s ease both;}
+  .submit-btn{background:linear-gradient(135deg,var(--accent),#0090cc);color:var(--dark);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.12em;border:none;padding:18px 56px;border-radius:4px;cursor:pointer;transition:all .2s;}
+  .submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,200,255,.3);}
+  .submit-note{font-size:12px;color:var(--muted);margin-top:12px;}
+  .global-error{color:var(--accent2);font-size:13px;margin-top:14px;display:none;padding:10px 16px;border:1px solid rgba(255,77,109,.3);border-radius:4px;background:rgba(255,77,109,.07);}
+  .global-error.show{display:block;}
+  .thankyou{display:none;text-align:center;padding:60px 24px;animation:fadeUp .5s ease both;}
+  .thankyou .icon{font-size:64px;margin-bottom:24px;}
+  .thankyou h2{font-family:'Bebas Neue',sans-serif;font-size:48px;color:#fff;margin-bottom:12px;}
+  .thankyou p{color:var(--muted);font-size:15px;}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:480px){.scale-btns{gap:4px}.scale-btn{width:36px;height:36px;font-size:13px}.stars label{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="badge">Saisonrückblick 2025/26</div>
+    <h1>Team<span>Umfrage</span></h1>
+    <p class="subtitle">Deine Meinung hilft uns, als Team zu wachsen.</p>
+    <div class="divider"></div>
+  </header>
+
+  <form id="survey" novalidate>
+
+```
+<!-- 00 -->
+<div class="section-header" style="margin-top:0;">
+  <div class="section-num">00</div>
+  <div class="section-info"><h2>Deine Angaben</h2><p>Nicht anonym</p></div>
+</div>
+<div class="card" id="card-name">
+  <label class="question"><span class="qnum">PFLICHTFELD</span>Vor- und Nachname <span class="req">*</span></label>
+  <input type="text" id="nameField" placeholder="z.B. Jana Müller">
+  <div class="field-error" id="err-name">Bitte gib deinen Namen ein.</div>
+</div>
+
+<!-- 01 -->
+<div class="section-header">
+  <div class="section-num">01</div>
+  <div class="section-info"><h2>Spielerleistung &amp; Entwicklung</h2><p>Persönlicher Fortschritt diese Saison</p></div>
+</div>
+<div class="card" id="card-q1">
+  <label class="question"><span class="qnum">FRAGE 1.1</span>Wie bewertest du deine persönliche Leistung diese Saison? <span class="req">*</span></label>
+  <div class="stars">
+    <input type="radio" name="q1" id="s5" value="5"><label for="s5">★</label>
+    <input type="radio" name="q1" id="s4" value="4"><label for="s4">★</label>
+    <input type="radio" name="q1" id="s3" value="3"><label for="s3">★</label>
+    <input type="radio" name="q1" id="s2" value="2"><label for="s2">★</label>
+    <input type="radio" name="q1" id="s1" value="1"><label for="s1">★</label>
+  </div>
+  <div class="field-error" id="err-q1">Bitte wähle eine Bewertung.</div>
+</div>
+<div class="card" id="card-q2">
+  <label class="question"><span class="qnum">FRAGE 1.2</span>In welchen Bereichen hast du dich am meisten verbessert? <span class="req">*</span></label>
+  <div class="options">
+    <label class="option"><input type="checkbox" name="q2" value="Technik"><div class="option-check">✓</div><span class="label">Technik &amp; Ballführung</span></label>
+    <label class="option"><input type="checkbox" name="q2" value="Taktik"><div class="option-check">✓</div><span class="label">Taktisches Verständnis</span></label>
+    <label class="option"><input type="checkbox" name="q2" value="Fitness"><div class="option-check">✓</div><span class="label">Fitness &amp; Ausdauer</span></label>
+    <label class="option"><input type="checkbox" name="q2" value="Mental"><div class="option-check">✓</div><span class="label">Mentale Stärke</span></label>
+    <label class="option"><input type="checkbox" name="q2" value="Kommunikation"><div class="option-check">✓</div><span class="label">Kommunikation auf dem Feld</span></label>
+  </div>
+  <div class="field-error" id="err-q2">Bitte wähle mindestens eine Option.</div>
+</div>
+<div class="card" id="card-q3">
+  <label class="question"><span class="qnum">FRAGE 1.3</span>Was war dein persönliches Highlight der Saison? <span class="req">*</span></label>
+  <textarea name="q3" placeholder="Beschreibe kurz deinen schönsten Moment dieser Saison..."></textarea>
+  <div class="field-error" id="err-q3">Bitte fülle dieses Feld aus.</div>
+</div>
+
+<!-- 02 -->
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div class="section-info"><h2>Teamdynamik &amp; Stimmung</h2><p>Zusammenhalt und Atmosphäre im Team</p></div>
+</div>
+<div class="card" id="card-q4">
+  <label class="question"><span class="qnum">FRAGE 2.1</span>Wie gut war der Zusammenhalt im Team diese Saison? <span class="req">*</span></label>
+  <div class="scale">
+    <span class="scale-label">Schwach</span>
+    <div class="scale-btns">
+      <label><input type="radio" name="q4" value="1"><div class="scale-btn">1</div></label>
+      <label><input type="radio" name="q4" value="2"><div class="scale-btn">2</div></label>
+      <label><input type="radio" name="q4" value="3"><div class="scale-btn">3</div></label>
+      <label><input type="radio" name="q4" value="4"><div class="scale-btn">4</div></label>
+      <label><input type="radio" name="q4" value="5"><div class="scale-btn">5</div></label>
+    </div>
+    <span class="scale-label">Stark</span>
+  </div>
+  <div class="field-error" id="err-q4">Bitte wähle einen Wert.</div>
+</div>
+<div class="card" id="card-q5">
+  <label class="question"><span class="qnum">FRAGE 2.2</span>Wie war die Stimmung im Team allgemein? <span class="req">*</span></label>
+  <div class="options">
+    <label class="option"><input type="radio" name="q5" value="Sehr gut"><div class="option-dot"></div><span class="label">Sehr gut – wir haben viel Spass gehabt</span></label>
+    <label class="option"><input type="radio" name="q5" value="Gut"><div class="option-dot"></div><span class="label">Gut – meistens positiv</span></label>
+    <label class="option"><input type="radio" name="q5" value="Gemischt"><div class="option-dot"></div><span class="label">Gemischt – es gab Hochs und Tiefs</span></label>
+    <label class="option"><input type="radio" name="q5" value="Schwierig"><div class="option-dot"></div><span class="label">Eher schwierig</span></label>
+  </div>
+  <div class="field-error" id="err-q5">Bitte wähle eine Option.</div>
+</div>
+<div class="card" id="card-q6">
+  <label class="question"><span class="qnum">FRAGE 2.3</span>Was würdest du dir für die Teamdynamik nächste Saison wünschen? <span class="req">*</span></label>
+  <textarea name="q6" placeholder="Z.B. mehr Teamevents, bessere Kommunikation, ..."></textarea>
+  <div class="field-error" id="err-q6">Bitte fülle dieses Feld aus.</div>
+</div>
+
+<!-- 03 -->
+<div class="section-header">
+  <div class="section-num">03</div>
+  <div class="section-info"><h2>Training &amp; Coaching</h2><p>Qualität und Wirksamkeit des Trainings</p></div>
+</div>
+<div class="card" id="card-q7">
+  <label class="question"><span class="qnum">FRAGE 3.1</span>Wie zufrieden warst du mit dem Training dieser Saison? <span class="req">*</span></label>
+  <div class="scale">
+    <span class="scale-label">Unzufrieden</span>
+    <div class="scale-btns">
+      <label><input type="radio" name="q7" value="1"><div class="scale-btn">1</div></label>
+      <label><input type="radio" name="q7" value="2"><div class="scale-btn">2</div></label>
+      <label><input type="radio" name="q7" value="3"><div class="scale-btn">3</div></label>
+      <label><input type="radio" name="q7" value="4"><div class="scale-btn">4</div></label>
+      <label><input type="radio" name="q7" value="5"><div class="scale-btn">5</div></label>
+    </div>
+    <span class="scale-label">Sehr zufrieden</span>
+  </div>
+  <div class="field-error" id="err-q7">Bitte wähle einen Wert.</div>
+</div>
+<div class="card" id="card-q8">
+  <label class="question"><span class="qnum">FRAGE 3.2</span>Was hat im Training besonders gut funktioniert? <span class="req">*</span></label>
+  <div class="options">
+    <label class="option"><input type="checkbox" name="q8" value="Struktur"><div class="option-check">✓</div><span class="label">Klare Struktur &amp; Planung</span></label>
+    <label class="option"><input type="checkbox" name="q8" value="Abwechslung"><div class="option-check">✓</div><span class="label">Abwechslungsreiche Übungen</span></label>
+    <label class="option"><input type="checkbox" name="q8" value="Feedback"><div class="option-check">✓</div><span class="label">Individuelles Feedback</span></label>
+    <label class="option"><input type="checkbox" name="q8" value="Intensitaet"><div class="option-check">✓</div><span class="label">Gute Intensität</span></label>
+    <label class="option"><input type="checkbox" name="q8" value="Taktik"><div class="option-check">✓</div><span class="label">Taktische Einheiten</span></label>
+  </div>
+  <div class="field-error" id="err-q8">Bitte wähle mindestens eine Option.</div>
+</div>
+<div class="card" id="card-q9">
+  <label class="question"><span class="qnum">FRAGE 3.3</span>Was soll im Training nächste Saison anders oder besser sein? <span class="req">*</span></label>
+  <textarea name="q9" placeholder="Dein offenes Feedback zum Training und Coaching..."></textarea>
+  <div class="field-error" id="err-q9">Bitte fülle dieses Feld aus.</div>
+</div>
+
+<!-- 04 SPIELE -->
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div class="section-info"><h2>Spiele &amp; Wettkampf</h2><p>Rückblick auf die Spielsaison</p></div>
+</div>
+<div class="card" id="card-q10">
+  <label class="question"><span class="qnum">FRAGE 4.1</span>Wie zufrieden warst du mit unserer Leistung in den Spielen? <span class="req">*</span></label>
+  <div class="scale">
+    <span class="scale-label">Unzufrieden</span>
+    <div class="scale-btns">
+      <label><input type="radio" name="q10" value="1"><div class="scale-btn">1</div></label>
+      <label><input type="radio" name="q10" value="2"><div class="scale-btn">2</div></label>
+      <label><input type="radio" name="q10" value="3"><div class="scale-btn">3</div></label>
+      <label><input type="radio" name="q10" value="4"><div class="scale-btn">4</div></label>
+      <label><input type="radio" name="q10" value="5"><div class="scale-btn">5</div></label>
+    </div>
+    <span class="scale-label">Sehr zufrieden</span>
+  </div>
+  <div class="field-error" id="err-q10">Bitte wähle einen Wert.</div>
+</div>
+<div class="card" id="card-q11">
+  <label class="question"><span class="qnum">FRAGE 4.2</span>Wie gut haben wir taktisch als Team in den Spielen funktioniert? <span class="req">*</span></label>
+  <div class="options">
+    <label class="option"><input type="radio" name="q11" value="Sehr gut"><div class="option-dot"></div><span class="label">Sehr gut – wir haben den Spielplan konsequent umgesetzt</span></label>
+    <label class="option"><input type="radio" name="q11" value="Gut"><div class="option-dot"></div><span class="label">Gut – meistens hat es geklappt</span></label>
+    <label class="option"><input type="radio" name="q11" value="Mittel"><div class="option-dot"></div><span class="label">Mittel – es war unbeständig</span></label>
+    <label class="option"><input type="radio" name="q11" value="Ausbaufähig"><div class="option-dot"></div><span class="label">Ausbaufähig – wir haben oft den Plan verloren</span></label>
+  </div>
+  <div class="field-error" id="err-q11">Bitte wähle eine Option.</div>
+</div>
+<div class="card" id="card-q12">
+  <label class="question"><span class="qnum">FRAGE 4.3</span>Was war der Moment oder das Spiel, das dir am meisten in Erinnerung geblieben ist? <span class="req">*</span></label>
+  <textarea name="q12" placeholder="Z.B. ein besonderes Spiel, ein wichtiger Sieg oder eine lehrreiche Niederlage..."></textarea>
+  <div class="field-error" id="err-q12">Bitte fülle dieses Feld aus.</div>
+</div>
+<div class="card" id="card-q13">
+  <label class="question"><span class="qnum">FRAGE 4.4</span>In welchen Spielsituationen hatten wir am meisten Mühe? <span class="req">*</span></label>
+  <div class="options">
+    <label class="option"><input type="checkbox" name="q13" value="Abschluss"><div class="option-check">✓</div><span class="label">Torabschluss &amp; Chancenauswertung</span></label>
+    <label class="option"><input type="checkbox" name="q13" value="Verteidigung"><div class="option-check">✓</div><span class="label">Defensive &amp; Rückzugsspiel</span></label>
+    <label class="option"><input type="checkbox" name="q13" value="Pressing"><div class="option-check">✓</div><span class="label">Pressing &amp; Ballgewinne</span></label>
+    <label class="option"><input type="checkbox" name="q13" value="Standards"><div class="option-check">✓</div><span class="label">Standardsituationen (Bully, Freistoss)</span></label>
+    <label class="option"><input type="checkbox" name="q13" value="Kondition"><div class="option-check">✓</div><span class="label">Kondition in den Schlussminuten</span></label>
+    <label class="option"><input type="checkbox" name="q13" value="Kommunikation_Spiel"><div class="option-check">✓</div><span class="label">Kommunikation während dem Spiel</span></label>
+  </div>
+  <div class="field-error" id="err-q13">Bitte wähle mindestens eine Option.</div>
+</div>
+
+<!-- 05 ANMERKUNGEN -->
+<div class="section-header">
+  <div class="section-num">05</div>
+  <div class="section-info"><h2>Freie Anmerkungen</h2><p>Alles, was du sonst noch sagen möchtest</p></div>
+</div>
+<div class="card notes-card" id="card-q14">
+  <label class="question"><span class="qnum">FRAGE 5.1</span>Hast du weitere Anmerkungen, Wünsche oder Feedback an das Team? <span class="req">*</span></label>
+  <textarea name="q14" class="large" placeholder="Schreib hier alles auf, was dir wichtig ist – egal ob positiv, kritisch oder ein Vorschlag für nächste Saison..."></textarea>
+  <div class="field-error" id="err-q14">Bitte fülle dieses Feld aus.</div>
+</div>
+
+<div class="submit-area">
+  <button type="submit" class="submit-btn" id="submitBtn">Umfrage absenden</button>
+  <p class="submit-note">Alle Felder sind Pflichtfelder <span class="req">*</span> · Antworten werden mit deinem Namen gespeichert.</p>
+  <div class="global-error" id="globalError">⚠ Bitte fülle alle Pflichtfelder aus, bevor du absendest.</div>
+</div>
+```
+
+  </form>
+
+  <div class="thankyou" id="thankyou">
+    <div class="icon">🏒</div>
+    <h2>Danke!</h2>
+    <p>Dein Feedback wurde erfolgreich übermittelt.<br>Zusammen machen wir nächste Saison noch besser.</p>
+  </div>
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGd0Pvt9I9L3w8cLoiXt_dwN2mboMUnKgMoz_BXSgOQl7NWbMAvu9KcPY7K49P0p_y/exec';
+
+  function validate() {
+    let valid = true;
+    function setError(cardId, errId, show) {
+      document.getElementById(cardId).classList.toggle('invalid', show);
+      document.getElementById(errId).classList.toggle('show', show);
+      if (show) valid = false;
+    }
+    setError('card-name',  'err-name',  !document.getElementById('nameField').value.trim());
+    setError('card-q1',    'err-q1',    !document.querySelector('input[name="q1"]:checked'));
+    setError('card-q2',    'err-q2',    document.querySelectorAll('input[name="q2"]:checked').length === 0);
+    setError('card-q3',    'err-q3',    !document.querySelector('[name="q3"]').value.trim());
+    setError('card-q4',    'err-q4',    !document.querySelector('input[name="q4"]:checked'));
+    setError('card-q5',    'err-q5',    !document.querySelector('input[name="q5"]:checked'));
+    setError('card-q6',    'err-q6',    !document.querySelector('[name="q6"]').value.trim());
+    setError('card-q7',    'err-q7',    !document.querySelector('input[name="q7"]:checked'));
+    setError('card-q8',    'err-q8',    document.querySelectorAll('input[name="q8"]:checked').length === 0);
+    setError('card-q9',    'err-q9',    !document.querySelector('[name="q9"]').value.trim());
+    setError('card-q10',   'err-q10',   !document.querySelector('input[name="q10"]:checked'));
+    setError('card-q11',   'err-q11',   !document.querySelector('input[name="q11"]:checked'));
+    setError('card-q12',   'err-q12',   !document.querySelector('[name="q12"]').value.trim());
+    setError('card-q13',   'err-q13',   document.querySelectorAll('input[name="q13"]:checked').length === 0);
+    setError('card-q14',   'err-q14',   !document.querySelector('[name="q14"]').value.trim());
+    return valid;
+  }
+
+  document.getElementById('survey').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!validate()) {
+      document.getElementById('globalError').classList.add('show');
+      document.querySelector('.card.invalid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    document.getElementById('globalError').classList.remove('show');
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet...';
+
+    const data = {
+      'Name':                              document.getElementById('nameField').value.trim(),
+      'Zeitstempel':                       new Date().toLocaleString('de-CH'),
+      '1.1 Persönliche Leistung':          document.querySelector('input[name="q1"]:checked').value + ' Sterne',
+      '1.2 Verbesserungsbereiche':         [...document.querySelectorAll('input[name="q2"]:checked')].map(i=>i.value).join(', '),
+      '1.3 Persönliches Highlight':        document.querySelector('[name="q3"]').value,
+      '2.1 Zusammenhalt (1-5)':            document.querySelector('input[name="q4"]:checked').value,
+      '2.2 Stimmung':                      document.querySelector('input[name="q5"]:checked').value,
+      '2.3 Wünsche Teamdynamik':           document.querySelector('[name="q6"]').value,
+      '3.1 Zufriedenheit Training (1-5)':  document.querySelector('input[name="q7"]:checked').value,
+      '3.2 Training gut':                  [...document.querySelectorAll('input[name="q8"]:checked')].map(i=>i.value).join(', '),
+      '3.3 Training verbessern':           document.querySelector('[name="q9"]').value,
+      '4.1 Leistung Spiele (1-5)':         document.querySelector('input[name="q10"]:checked').value,
+      '4.2 Taktik Spiele':                 document.querySelector('input[name="q11"]:checked').value,
+      '4.3 Erinnerung Spiel':              document.querySelector('[name="q12"]').value,
+      '4.4 Schwierige Spielsituationen':   [...document.querySelectorAll('input[name="q13"]:checked')].map(i=>i.value).join(', '),
+      '5.1 Freie Anmerkungen':             document.querySelector('[name="q14"]').value,
+    };
+
+    try {
+      await fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+      document.getElementById('survey').style.display = 'none';
+      document.getElementById('thankyou').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch(err) {
+      btn.disabled = false;
+      btn.textContent = 'Umfrage absenden';
+      alert('Fehler beim Senden. Bitte versuche es nochmal.');
+    }
+  });
+</script>
+
+</body>
+</html>
